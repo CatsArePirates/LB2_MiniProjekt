@@ -1,5 +1,7 @@
 package MiniProjekt;
 
+import Backtracker.Backtracker;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,9 +10,12 @@ import java.io.File;
 
 public class FormMain extends JFrame {
     private JPanel mainPanel;
-    private JButton btnUploadLabyrinth;
+    private JButton btnUploadLabyrinth; // Click button to upload image
+    private JPanel panelImage; // Contains the image of the labyrinth
+    private JButton btnStart;
 
     private Labyrinth labyrinth = null;
+    private Backtracker<Labyrinth> lBacktracker = new Backtracker<Labyrinth>();
 
     public FormMain(String title) {
         super(title);
@@ -19,6 +24,7 @@ public class FormMain extends JFrame {
         this.setContentPane(mainPanel);
         this.pack();
 
+        // Actionlistener for button btnUploadLabyrinth
         btnUploadLabyrinth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -26,16 +32,43 @@ public class FormMain extends JFrame {
                 ReadFile();
             }
         });
+
+        // Actionlistener for button btnStart
+        btnStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Solve labyrinth
+                SolveLabyrinth();
+            }
+        });
     }
 
+    // Read in labyrinth-file and create labyrinth
     private void ReadFile() {
         FileDialog fileDialog = new FileDialog(this, "Upload a labyrinth", FileDialog.LOAD);
+        fileDialog.setFile("*.png");
+        fileDialog.setDirectory("C:\\");
         fileDialog.setVisible(true);
-        String filename = fileDialog.getFile();
+        String filename = fileDialog.getDirectory() + fileDialog.getFile();
 
-        if (filename != null) {
+        if (fileDialog.getFile() != null) {
             File labyrinthFile = new File(filename);
             labyrinth = new Labyrinth(labyrinthFile.toString());
+
+            // TODO: Display image of labyrinth in panelImage
+
+            btnUploadLabyrinth.setEnabled(false);
+            btnStart.setEnabled(true);
         }
+    }
+
+    // Solve the labyrinth
+    private void SolveLabyrinth() {
+        if (labyrinth == null)
+            return;
+        btnStart.setEnabled(false);
+
+        // TODO: Solve
+
     }
 }
