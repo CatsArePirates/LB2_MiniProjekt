@@ -6,13 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class FormMain extends JFrame {
     private JPanel mainPanel;
     private JButton btnUploadLabyrinth; // Click button to upload image
-    private JPanel panelImage; // Contains the image of the labyrinth
-    private JButton btnStart;
+    private JPanel panelImage;
+    private JLabel labelImage; // Contains the image of the labyrinth
+    private JButton btnStart; // Click button to start the solving-process
 
     private Labyrinth labyrinth = null;
     private Backtracker<Labyrinth> lBacktracker = new Backtracker<Labyrinth>();
@@ -49,17 +51,49 @@ public class FormMain extends JFrame {
         fileDialog.setFile("*.png");
         fileDialog.setDirectory("C:\\");
         fileDialog.setVisible(true);
-        String filename = fileDialog.getDirectory() + fileDialog.getFile();
+        String path = fileDialog.getDirectory() + fileDialog.getFile();
 
         if (fileDialog.getFile() != null) {
-            File labyrinthFile = new File(filename);
+            File labyrinthFile = new File(path);
             labyrinth = new Labyrinth(labyrinthFile.toString());
 
-            // TODO: Display image of labyrinth in panelImage
+            // Display the image
+            ImageIcon icon = new ImageIcon(path);
+            Image scaledImage = resizeImage(icon.getImage(), panelImage.getWidth(), panelImage.getHeight());
+            icon.setImage(scaledImage);
+            labelImage.setIcon(icon);
 
             btnUploadLabyrinth.setEnabled(false);
             btnStart.setEnabled(true);
         }
+    }
+
+    private Image resizeImage(Image image, int pWidth, int pHeight) {
+        // Calculate the factor needed to resize image
+        int iWidth = image.getWidth(null);
+        int iHeight = image.getHeight(null);
+        int scaleFactor = 0;
+        int scaleFactorW = pWidth / iWidth;
+        int scaleFactorH = pHeight / iHeight;
+
+        if (scaleFactorW <= scaleFactorH) {
+            scaleFactor = scaleFactorW;
+        } else {
+            scaleFactor = scaleFactorH;
+        }
+
+        iWidth = iWidth * scaleFactor;
+        iHeight = iHeight * scaleFactor;
+
+        // Resize the image
+        BufferedImage resizedImage = new BufferedImage(iWidth, iHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImage.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(image, 0, 0, iWidth, iHeight, null);
+        g2.dispose();
+
+        return resizedImage;
     }
 
     // Solve the labyrinth

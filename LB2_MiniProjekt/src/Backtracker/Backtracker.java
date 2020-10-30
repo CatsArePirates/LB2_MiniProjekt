@@ -1,8 +1,6 @@
 package Backtracker;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class Backtracker<T> /*implements Iterator*/ {
     private ArrayList<T> stack = new ArrayList<>();
