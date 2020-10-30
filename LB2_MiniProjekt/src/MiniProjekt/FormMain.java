@@ -10,6 +10,8 @@ public class FormMain extends JFrame {
     private JPanel mainPanel;
     private JButton btnUploadLabyrinth;
 
+    private Labyrinth labyrinth = null;
+
     public FormMain(String title) {
         super(title);
 
@@ -33,8 +35,7 @@ public class FormMain extends JFrame {
 
         if (filename != null) {
             File labyrinthFile = new File(filename);
-
-            // Create labyrinth from file
+            labyrinth = new Labyrinth(labyrinthFile.toString());
         }
     }
 }
