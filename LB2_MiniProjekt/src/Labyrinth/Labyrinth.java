@@ -51,18 +51,6 @@ public class Labyrinth {
         }
     }
 
-    /*public void DrawWhite() {
-        // Draw all transparent pixel white
-        for (int i = 0; i < image.getWidth(); i++) {
-            for (int j = 0; j < image.getHeight(); j++) {
-                // Test if pixel is transparent
-                if (image.getRGB(i, j)>>24 == 0x00) {
-                    image.setRGB(i, j, new Color(255, 255, 255, 255).getRGB());
-                }
-            }
-        }
-    }*/
-
     public BufferedImage SolveNext() {
 
 
@@ -74,7 +62,18 @@ public class Labyrinth {
     }
 
     private void DrawImage() {
+        // Draw field into image
+        for (int i = 0; i < fields[0].length; i++) {
+            for (int j = 0; j < fields.length; j++) {
+                LabyrinthField field = fields[j][i];
 
+                // Draw field into image
+                BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+                Graphics2D g2 = image.createGraphics();
+                g2.setColor(field.color);
+                // TODO: find correct position in image
+            }
+        }
     }
 
     public boolean HasNext() {
