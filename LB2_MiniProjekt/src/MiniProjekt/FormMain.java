@@ -2,12 +2,14 @@ package MiniProjekt;
 
 import Backtracker.Backtracker;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class FormMain extends JFrame {
     private JPanel mainPanel;
@@ -47,20 +49,32 @@ public class FormMain extends JFrame {
 
     // Read in labyrinth-file and create labyrinth
     private void ReadFile() {
+        // Open a filedialog to let the user choose an image
         FileDialog fileDialog = new FileDialog(this, "Upload a labyrinth", FileDialog.LOAD);
         fileDialog.setFile("*.png");
         fileDialog.setDirectory("C:\\");
         fileDialog.setVisible(true);
+
         String path = fileDialog.getDirectory() + fileDialog.getFile();
+        Image image = null;
 
         if (fileDialog.getFile() != null) {
-            File labyrinthFile = new File(path);
-            labyrinth = new Labyrinth(labyrinthFile.toString());
+            try {
+                File file = new File(path);
+                image = ImageIO.read(file);
+
+                // Resize image
+                image = resizeImage(image, panelImage.getWidth(), panelImage.getHeight());
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error while reading in file.");
+                return;
+            }
+
+            labyrinth = new Labyrinth((BufferedImage) image);
 
             // Display the image
-            ImageIcon icon = new ImageIcon(path);
-            Image scaledImage = resizeImage(icon.getImage(), panelImage.getWidth(), panelImage.getHeight());
-            icon.setImage(scaledImage);
+            ImageIcon icon = new ImageIcon();
+            icon.setImage(image);
             labelImage.setIcon(icon);
 
             btnUploadLabyrinth.setEnabled(false);
@@ -103,6 +117,13 @@ public class FormMain extends JFrame {
         btnStart.setEnabled(false);
 
         // TODO: Solve
+        labyrinth.DrawWhite();
+        ImageIcon icon = new ImageIcon();
+        icon.setImage(labyrinth.getImage());
+        labelImage.setIcon(icon);
 
+
+
+        btnUploadLabyrinth.setEnabled(true);
     }
 }
