@@ -82,13 +82,16 @@ public class FormMain extends JFrame {
     private void Solve() {
         ImageIcon icon = new ImageIcon();
 
-        while (labyrinth.HasNext()) {
+        /*while (labyrinth.HasNext()) {
             icon.setImage(labyrinth.SolveNext());
             labelImage.setIcon(icon);
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ignored) { }
-        }
+        }*/
+
+        icon.setImage(labyrinth.SolveNext());
+        labelImage.setIcon(icon);
     }
 
     private Image resizeImage(Image image, int pWidth, int pHeight) {

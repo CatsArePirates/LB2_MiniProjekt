@@ -60,7 +60,12 @@ public class Labyrinth {
                 LabyrinthField field = fields[i][j];
 
                 // Draw field
-                g2.setColor(field.GetColor());
+                if (field.GetVisited()) {
+                    g2.setColor(Color.BLUE);
+                } else {
+                    g2.setColor(Color.WHITE);
+                }
+
                 g2.fillRect(iPosX+border, iPosY+border, field.GetLength()-border, field.GetLength()-border);
 
                 g2.setColor(Color.BLACK);
@@ -90,7 +95,7 @@ public class Labyrinth {
         g2.dispose();
     }
 
-    // TODO: Backtrack the way through the labyrinth
+    // Backtrack the way through the labyrinth
     public BufferedImage SolveNext() {
         LabyrinthField currentField = fields[0][0];
         currentField.SetVisited(true);
@@ -162,7 +167,7 @@ public class Labyrinth {
             }
         }
 
-        return neighbour;
+        return null;
     }
 
     // Remove wall between currentField and neighbour
