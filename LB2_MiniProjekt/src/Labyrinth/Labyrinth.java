@@ -3,6 +3,7 @@ package Labyrinth;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Labyrinth {
     /* Member/Fields */
@@ -85,22 +86,19 @@ public class Labyrinth {
         g2.dispose();
     }
 
+    // TODO: Backtrack the way through the labyrinth
     public BufferedImage SolveNext() {
-        // TODO: Backtrack the way through the labyrinth
         LabyrinthField currentField = fields[0][0];
-
         currentField.SetVisited(true);
         stack.add(currentField);
 
         while (!stack.isEmpty()) {
             currentField = stack.remove(stack.size()-1);
-
             LabyrinthField neighbour = GetNextUnvisitedNeighbour(currentField);
+
             if (neighbour != null) {
                 stack.add(currentField);
-                // TODO: Remove wall between currentField and neighbour
-
-                // Mark neighbour as visited and push to stack
+                RemoveWallBetween(currentField, neighbour);
                 neighbour.SetVisited(true);
                 stack.add(neighbour);
             }
@@ -111,13 +109,62 @@ public class Labyrinth {
     }
 
     private LabyrinthField GetNextUnvisitedNeighbour(LabyrinthField currField) {
-        // TODO: Get the next neighbour who wasn't already visited
-        return null;
+        LabyrinthField neighbour = null;
+        int [] posArr = FindElement(currField);
+
+        if (posArr != null) {
+            int width = posArr[0];
+            int height = posArr[1];
+
+            if (height-1 >= 0) {
+                // Above
+                neighbour = fields[width][height-1];
+
+                if (!neighbour.GetVisited()) {
+                    return neighbour;
+                }
+            } else if (width+1 <= fields.length-1) {
+                // Right
+                neighbour = fields[width+1][height];
+
+                if (!neighbour.GetVisited()) {
+                    return neighbour;
+                }
+            } else if (height+1 <= fields[0].length-1) {
+                // Below
+                neighbour = fields[width][height+1];
+
+                if (!neighbour.GetVisited()) {
+                    return neighbour;
+                }
+            } else if (width-1 >= 0) {
+                // Left
+                neighbour = fields[width-1][height];
+
+                if (!neighbour.GetVisited()) {
+                    return neighbour;
+                }
+            }
+        }
+
+        return neighbour;
     }
 
-    public BufferedImage SolveAll() {
-        // TODO: Finish backtracking immediately
-        return image;
+    private void RemoveWallBetween(LabyrinthField f1, LabyrinthField f2) {
+        // TODO: Remove wall between currentField and neighbour
+    }
+
+    private int[] FindElement(LabyrinthField currField) {
+        for (int i = 0; i < fields[0].length; i++) {
+            for (int j = 0; j < fields.length; j++) {
+                LabyrinthField field = fields[i][j];
+                if (field.equals(currField)) {
+                    return new int[] { i, j };
+                }
+            }
+        }
+
+        return null;
     }
 
     public boolean HasNext() {
