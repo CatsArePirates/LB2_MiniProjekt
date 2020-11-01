@@ -1,5 +1,7 @@
 package Labyrinth;
 
+import Enumerations.WallPosition;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ public class Labyrinth {
     private LabyrinthField[][] fields = null; // Labyrinth is stored as a matrix
     private int fieldLength;
     private ArrayList<LabyrinthField> stack = new ArrayList<>();
+
+    private WallPosition wallPosition;
 
     /* Constructor */
 
@@ -62,7 +66,7 @@ public class Labyrinth {
                 g2.setColor(Color.BLACK);
 
                 // Draw walls around field
-                if (field.GetWalls().top) {
+                if (field.GetWalls().above) {
                     g2.drawLine(iPosX, iPosY, iPosX+fieldLength, iPosY);
                 }
 
@@ -108,6 +112,7 @@ public class Labyrinth {
         return image;
     }
 
+    // Return next unvisited neighbour
     private LabyrinthField GetNextUnvisitedNeighbour(LabyrinthField currField) {
         LabyrinthField neighbour = null;
         int [] posArr = FindElement(currField);
@@ -121,27 +126,37 @@ public class Labyrinth {
                 neighbour = fields[width][height-1];
 
                 if (!neighbour.GetVisited()) {
+                    wallPosition = WallPosition.Above;
                     return neighbour;
                 }
-            } else if (width+1 <= fields.length-1) {
+            }
+
+            if (width+1 <= fields.length-1) {
                 // Right
                 neighbour = fields[width+1][height];
 
                 if (!neighbour.GetVisited()) {
+                    wallPosition = WallPosition.Right;
                     return neighbour;
                 }
-            } else if (height+1 <= fields[0].length-1) {
+            }
+
+            if (height+1 <= fields[0].length-1) {
                 // Below
                 neighbour = fields[width][height+1];
 
                 if (!neighbour.GetVisited()) {
+                    wallPosition = WallPosition.Below;
                     return neighbour;
                 }
-            } else if (width-1 >= 0) {
+            }
+
+            if (width-1 >= 0) {
                 // Left
                 neighbour = fields[width-1][height];
 
                 if (!neighbour.GetVisited()) {
+                    wallPosition = WallPosition.Left;
                     return neighbour;
                 }
             }
@@ -150,8 +165,10 @@ public class Labyrinth {
         return neighbour;
     }
 
-    private void RemoveWallBetween(LabyrinthField f1, LabyrinthField f2) {
-        // TODO: Remove wall between currentField and neighbour
+    // Remove wall between currentField and neighbour
+    private void RemoveWallBetween(LabyrinthField currField, LabyrinthField neighbour) {
+        currField.SetSingleWall(wallPosition, false);
+        neighbour.SetSingleWall(wallPosition.GetOppositePosition(), false);
     }
 
     private int[] FindElement(LabyrinthField currField) {

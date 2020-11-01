@@ -1,12 +1,13 @@
 package Labyrinth;
 
+import Enumerations.WallPosition;
+
 import java.awt.*;
 
 public class LabyrinthField {
     /* Member/Fields */
 
     private int length;
-    private Color color = new Color(255, 255, 255, 255);
     private Walls walls = new Walls();
     private boolean visited = false;
 
@@ -26,14 +27,6 @@ public class LabyrinthField {
         this.length = length;
     }
 
-    public Color GetColor() {
-        return color;
-    }
-
-    public void SetColor(Color color) {
-        this.color = color;
-    }
-
     public Walls GetWalls() {
         return walls;
     }
@@ -51,4 +44,21 @@ public class LabyrinthField {
     }
 
     /* Methods */
+
+    public void SetSingleWall(WallPosition wallPosition, boolean value) {
+        switch (wallPosition) {
+            case Above:
+                walls.above = value;
+                break;
+            case Right:
+                walls.right = value;
+                break;
+            case Below:
+                walls.below = value;
+                break;
+            case Left:
+                walls.left = value;
+                break;
+        }
+    }
 }
