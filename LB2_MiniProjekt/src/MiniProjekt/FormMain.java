@@ -56,7 +56,7 @@ public class FormMain extends JFrame {
     // Read in labyrinth-file and create labyrinth
     private void StartSolving() {
         // Sanity check
-        if (labyrinth == null || tbWidth.getText().length() <= 0 || tbHeight.getText().length() <= 0 || tbFieldLength.getText().length() <= 0)
+        if (tbWidth.getText().length() <= 0 || tbHeight.getText().length() <= 0 || tbFieldLength.getText().length() <= 0)
             return;
 
         btnSolve.setEnabled(false);
@@ -69,14 +69,7 @@ public class FormMain extends JFrame {
         icon.setImage(labyrinth.getImage());
         labelImage.setIcon(icon);
 
-        // Solve
-        while (labyrinth.HasNext()) {
-            icon.setImage(labyrinth.SolveNext());
-            labelImage.setIcon(icon);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) { }
-        }
+        // TODO: Solve
     }
 
     // Solve the labyrinth
