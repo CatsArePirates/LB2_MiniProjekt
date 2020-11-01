@@ -1,9 +1,7 @@
 package MiniProjekt;
 
-import Backtracker.Backtracker;
 import Labyrinth.Labyrinth;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -76,7 +74,7 @@ public class FormMain extends JFrame {
     private void BeDone() {
         btnBeDone.setEnabled(false);
 
-        // TODO: Jump to solved labyrinth
+        // TODO: Finish backtracking immediately (without the thread.sleep(500))
 
         //btnSolve.setEnabled(true);
     }
