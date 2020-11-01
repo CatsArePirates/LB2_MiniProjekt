@@ -4,6 +4,7 @@ import Backtracker.Backtracker;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Labyrinth {
     /* Member/Fields */
@@ -11,7 +12,7 @@ public class Labyrinth {
     private BufferedImage image = null;
     private LabyrinthField[][] fields = null; // Labyrinth is stored as a matrix
     private int fieldLength;
-    private Backtracker<LabyrinthField> fieldBacktracker = new Backtracker<LabyrinthField>();
+    private ArrayList<LabyrinthField> stack = new ArrayList<>();
 
     /* Constructor */
 
@@ -88,10 +89,32 @@ public class Labyrinth {
 
     public BufferedImage SolveNext() {
         // TODO: Backtrack the way through the labyrinth
-        fieldBacktracker.Push(fields[0][0]);
+        LabyrinthField currentField = fields[0][0];
+
+        currentField.SetVisited(true);
+        stack.add(currentField);
+
+        while (!stack.isEmpty()) {
+            currentField = stack.remove(stack.size()-1);
+
+            LabyrinthField neighbour = GetNextUnvisitedNeighbour(currentField);
+            if (neighbour != null) {
+                stack.add(currentField);
+                // TODO: Remove wall between currentField and neighbour
+                
+                // Mark neighbour as visited and push to stack
+                neighbour.SetVisited(true);
+                stack.add(neighbour);
+            }
+        }
 
         DrawImage(5);
         return image;
+    }
+
+    private LabyrinthField GetNextUnvisitedNeighbour(LabyrinthField currField) {
+        // TODO: Get the next neighbour who wasn't already visited
+        return null;
     }
 
     public BufferedImage SolveAll() {

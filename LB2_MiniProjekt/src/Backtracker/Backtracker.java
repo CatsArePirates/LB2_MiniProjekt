@@ -19,6 +19,12 @@ public class Backtracker<T> /*implements Iterator*/ {
         return element;
     }
 
+    public boolean isEmpty() {
+        if (stack.isEmpty()) {
+            return
+        }
+    }
+
     /*// Is at lest one element left
     @Override
     public boolean hasNext() {
