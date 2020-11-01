@@ -69,7 +69,7 @@ public class FormMain extends JFrame {
         icon.setImage(labyrinth.getImage());
         labelImage.setIcon(icon);
 
-        // TODO: Solve
+        Solve();
     }
 
     // Solve the labyrinth
@@ -79,6 +79,18 @@ public class FormMain extends JFrame {
         // TODO: Jump to solved labyrinth
 
         //btnSolve.setEnabled(true);
+    }
+
+    private void Solve() {
+        ImageIcon icon = new ImageIcon();
+
+        while (labyrinth.HasNext()) {
+            icon.setImage(labyrinth.SolveNext());
+            labelImage.setIcon(icon);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) { }
+        }
     }
 
     private Image resizeImage(Image image, int pWidth, int pHeight) {

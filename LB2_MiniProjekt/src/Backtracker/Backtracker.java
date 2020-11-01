@@ -5,9 +5,7 @@ import java.util.ArrayList;
 public class Backtracker<T> /*implements Iterator*/ {
     private ArrayList<T> stack = new ArrayList<>();
 
-    public Backtracker() {
-
-    }
+    public Backtracker() { }
 
     // Add an element
     public void Push(T element) {

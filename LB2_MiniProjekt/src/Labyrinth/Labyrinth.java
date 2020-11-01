@@ -1,5 +1,7 @@
 package Labyrinth;
 
+import Backtracker.Backtracker;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -9,6 +11,7 @@ public class Labyrinth {
     private BufferedImage image = null;
     private LabyrinthField[][] fields = null; // Labyrinth is stored as a matrix
     private int fieldLength;
+    private Backtracker<LabyrinthField> fieldBacktracker = new Backtracker<LabyrinthField>();
 
     /* Constructor */
 
@@ -84,7 +87,10 @@ public class Labyrinth {
     }
 
     public BufferedImage SolveNext() {
-        // TODO: Backtrack the way throught the labyrinth
+        // TODO: Backtrack the way through the labyrinth
+        fieldBacktracker.Push(fields[0][0]);
+
+        DrawImage(5);
         return image;
     }
 
