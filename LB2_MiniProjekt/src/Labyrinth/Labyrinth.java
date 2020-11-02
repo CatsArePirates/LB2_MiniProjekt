@@ -100,6 +100,7 @@ public class Labyrinth {
         while (!stack.isEmpty()) {
             currentField = stack.remove(stack.size()-1);
             LabyrinthField neighbour = GetNextUnvisitedNeighbour(currentField);
+            currentField.SetColor(Color.WHITE); // Change the color of the field
 
             if (neighbour != null) {
                 stack.add(currentField);
@@ -116,7 +117,7 @@ public class Labyrinth {
 
     // Return next unvisited neighbour
     private LabyrinthField GetNextUnvisitedNeighbour(LabyrinthField currField) {
-        LabyrinthField neighbour = null;
+        LabyrinthField neighbour;
         int [] posArr = FindElement(currField);
 
         if (posArr != null) {
