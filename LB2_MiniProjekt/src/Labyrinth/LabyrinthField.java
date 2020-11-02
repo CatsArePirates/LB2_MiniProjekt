@@ -9,6 +9,7 @@ public class LabyrinthField {
 
     private int length;
     private Walls walls = new Walls();
+    private Color color = Color.WHITE;
     private boolean visited = false;
 
     /* Constructor */
@@ -33,6 +34,14 @@ public class LabyrinthField {
 
     public void SetWalls(Walls walls) {
         this.walls = walls;
+    }
+
+    public Color GetColor() {
+        return color;
+    }
+
+    public void SetColor(Color color) {
+        this.color = color;
     }
 
     public boolean GetVisited() {

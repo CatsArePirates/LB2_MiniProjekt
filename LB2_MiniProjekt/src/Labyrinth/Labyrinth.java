@@ -5,7 +5,6 @@ import Enumerations.WallPosition;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Labyrinth {
     /* Member/Fields */
@@ -60,11 +59,7 @@ public class Labyrinth {
                 LabyrinthField field = fields[i][j];
 
                 // Draw field
-                if (field.GetVisited()) {
-                    g2.setColor(Color.BLUE);
-                } else {
-                    g2.setColor(Color.WHITE);
-                }
+                g2.setColor(field.GetColor());
 
                 g2.fillRect(iPosX+border, iPosY+border, field.GetLength()-border, field.GetLength()-border);
 
@@ -99,6 +94,7 @@ public class Labyrinth {
     public BufferedImage SolveNext() {
         LabyrinthField currentField = fields[0][0];
         currentField.SetVisited(true);
+        currentField.SetColor(Color.BLUE); // Change the color of the field
         stack.add(currentField);
 
         while (!stack.isEmpty()) {
@@ -109,6 +105,7 @@ public class Labyrinth {
                 stack.add(currentField);
                 RemoveWallBetween(currentField, neighbour);
                 neighbour.SetVisited(true);
+                neighbour.SetColor(Color.BLUE); // Change the color of the field
                 stack.add(neighbour);
             }
         }
