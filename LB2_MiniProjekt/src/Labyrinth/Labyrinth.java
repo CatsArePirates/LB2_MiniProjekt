@@ -5,6 +5,7 @@ import Enumerations.WallPosition;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Labyrinth {
     /* Member/Fields */
@@ -99,7 +100,7 @@ public class Labyrinth {
 
         while (!stack.isEmpty()) {
             currentField = stack.remove(stack.size()-1);
-            LabyrinthField neighbour = GetNextUnvisitedNeighbour(currentField);
+            LabyrinthField neighbour = GetRandomUnvisitedNeighbour(currentField);
             currentField.SetColor(Color.WHITE); // Change the color of the field
 
             if (neighbour != null) {
@@ -116,7 +117,8 @@ public class Labyrinth {
     }
 
     // Return next unvisited neighbour
-    private LabyrinthField GetNextUnvisitedNeighbour(LabyrinthField currField) {
+    private LabyrinthField GetRandomUnvisitedNeighbour(LabyrinthField currField) {
+        ArrayList<LabyrinthField> neighbours = new ArrayList<LabyrinthField>();
         LabyrinthField neighbour;
         int [] posArr = FindElement(currField);
 
@@ -129,8 +131,8 @@ public class Labyrinth {
                 neighbour = fields[width][height-1];
 
                 if (!neighbour.GetVisited()) {
-                    wallPosition = WallPosition.Above;
-                    return neighbour;
+                    neighbours.add(neighbour);
+                    //wallPosition = WallPosition.Above;
                 }
             }
 
@@ -139,8 +141,8 @@ public class Labyrinth {
                 neighbour = fields[width+1][height];
 
                 if (!neighbour.GetVisited()) {
-                    wallPosition = WallPosition.Right;
-                    return neighbour;
+                    neighbours.add(neighbour);
+                    //wallPosition = WallPosition.Right;
                 }
             }
 
@@ -149,8 +151,8 @@ public class Labyrinth {
                 neighbour = fields[width][height+1];
 
                 if (!neighbour.GetVisited()) {
-                    wallPosition = WallPosition.Below;
-                    return neighbour;
+                    neighbours.add(neighbour);
+                    //wallPosition = WallPosition.Below;
                 }
             }
 
@@ -159,13 +161,21 @@ public class Labyrinth {
                 neighbour = fields[width-1][height];
 
                 if (!neighbour.GetVisited()) {
-                    wallPosition = WallPosition.Left;
-                    return neighbour;
+                    neighbours.add(neighbour);
+                    //wallPosition = WallPosition.Left;
                 }
             }
         }
 
-        return null;
+        Random rand = new Random();
+
+        if (neighbours.size() == 0) {
+            return null;
+        } else {
+            int r = rand.nextInt(neighbours.size());
+            // TODO: set WallPosition
+            return neighbours.get(r);
+        }
     }
 
     // Remove wall between currentField and neighbour
