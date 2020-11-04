@@ -118,7 +118,8 @@ public class Labyrinth {
 
     // Return next unvisited neighbour
     private LabyrinthField GetRandomUnvisitedNeighbour(LabyrinthField currField) {
-        ArrayList<LabyrinthField> neighbours = new ArrayList<LabyrinthField>();
+        ArrayList<LabyrinthField> neighbours = new ArrayList<>();
+        ArrayList<WallPosition> wallPositions = new ArrayList<>();
         LabyrinthField neighbour;
         int [] posArr = FindElement(currField);
 
@@ -132,7 +133,7 @@ public class Labyrinth {
 
                 if (!neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    //wallPosition = WallPosition.Above;
+                    wallPositions.add(WallPosition.Above);
                 }
             }
 
@@ -142,7 +143,7 @@ public class Labyrinth {
 
                 if (!neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    //wallPosition = WallPosition.Right;
+                    wallPositions.add(WallPosition.Right);
                 }
             }
 
@@ -152,7 +153,7 @@ public class Labyrinth {
 
                 if (!neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    //wallPosition = WallPosition.Below;
+                    wallPositions.add(WallPosition.Below);
                 }
             }
 
@@ -162,7 +163,7 @@ public class Labyrinth {
 
                 if (!neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    //wallPosition = WallPosition.Left;
+                    wallPositions.add(WallPosition.Left);
                 }
             }
         }
@@ -173,7 +174,7 @@ public class Labyrinth {
             return null;
         } else {
             int r = rand.nextInt(neighbours.size());
-            // TODO: set WallPosition
+            wallPosition = wallPositions.get(r);
             return neighbours.get(r);
         }
     }
