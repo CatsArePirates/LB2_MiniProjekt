@@ -3,10 +3,8 @@ package MiniProjekt;
 import Labyrinth.Labyrinth;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 public class FormMain extends JFrame {
     private JPanel mainPanel;
