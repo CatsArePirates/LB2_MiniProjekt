@@ -86,12 +86,17 @@ public class Labyrinth {
 
             ArrayList<LabyrinthField> neighbourFields = GetUnvisitedNeighbours(currentField);
             // TODO: remove fields which can't be taken
+            ArrayList<LabyrinthField> tmpList = new ArrayList<LabyrinthField>();
             for (LabyrinthField f : neighbourFields) {
                 int count = GetSurroundingVisitedFields(f).size();
 
                 if (count > 1) {
-                    neighbourFields.remove(f);
+                    tmpList.add(f);
                 }
+            }
+
+            for (LabyrinthField f : tmpList) {
+                neighbourFields.remove(f);
             }
 
             if (neighbourFields.size() > 0) {
