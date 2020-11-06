@@ -57,24 +57,26 @@ public class FormMain extends JFrame {
         if (tbWidth.getText().length() <= 0 || tbHeight.getText().length() <= 0 || tbFieldLength.getText().length() <= 0)
             return;
 
-        btnSolve.setEnabled(false);
         btnBeDone.setEnabled(true);
 
         // Initialize labyrinth
-        labyrinth = new Labyrinth(Integer.parseInt(tbWidth.getText()), Integer.parseInt(tbHeight.getText()), Integer.parseInt(tbFieldLength.getText()));
-
-        ImageIcon icon = new ImageIcon();
-        icon.setImage(labyrinth.getImage());
-        labelImage.setIcon(icon);
+        if (labyrinth == null) {
+            labyrinth = new Labyrinth(Integer.parseInt(tbWidth.getText()), Integer.parseInt(tbHeight.getText()), Integer.parseInt(tbFieldLength.getText()));
+            ImageIcon icon = new ImageIcon();
+            icon.setImage(labyrinth.getImage());
+            labelImage.setIcon(icon);
+        }
 
         Solve();
     }
 
     // Solve the labyrinth
     private void BeDone() {
-        btnBeDone.setEnabled(false);
+        //btnBeDone.setEnabled(false);
 
-        // TODO: Finish backtracking immediately (without the thread.sleep(500))
+        do {
+            Solve();
+        } while (labyrinth.HasNext());
 
         //btnSolve.setEnabled(true);
     }
@@ -82,16 +84,11 @@ public class FormMain extends JFrame {
     private void Solve() {
         ImageIcon icon = new ImageIcon();
 
-        /*while (labyrinth.HasNext()) {
-            icon.setImage(labyrinth.SolveNext());
-            labelImage.setIcon(icon);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) { }
-        }*/
-
         icon.setImage(labyrinth.SolveNext());
         labelImage.setIcon(icon);
+
+        //icon.setImage(labyrinth.SolveNext());
+        //labelImage.setIcon(icon);
     }
 
     private Image resizeImage(Image image, int pWidth, int pHeight) {

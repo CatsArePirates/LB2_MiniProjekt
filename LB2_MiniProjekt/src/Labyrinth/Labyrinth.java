@@ -15,7 +15,7 @@ public class Labyrinth {
     private int fieldLength;
     private ArrayList<LabyrinthField> stack = new ArrayList<>();
 
-    private WallPosition wallPosition;
+    private LabyrinthField currentField = null;
 
     /* Constructor */
 
@@ -59,30 +59,12 @@ public class Labyrinth {
             for (int j = 0; j < fields.length; j++) {
                 LabyrinthField field = fields[i][j];
 
-                // Draw field
-                g2.setColor(field.GetColor());
+                if (field != null) {
+                    // Draw field
+                    g2.setColor(field.GetColor());
 
-                g2.fillRect(iPosX+border, iPosY+border, field.GetLength()-border, field.GetLength()-border);
-
-                g2.setColor(Color.BLACK);
-
-                // Draw walls around field
-                if (field.GetWalls().above) {
-                    g2.drawLine(iPosX, iPosY, iPosX+fieldLength, iPosY);
+                    g2.fillRect(iPosX, iPosY, field.GetLength(), field.GetLength());
                 }
-
-                if (field.GetWalls().right) {
-                    g2.drawLine(iPosX+fieldLength, iPosY, iPosX+fieldLength, iPosY+fieldLength);
-                }
-
-                if (field.GetWalls().below) {
-                    g2.drawLine(iPosX, iPosY+fieldLength, iPosX+fieldLength, iPosY+fieldLength);
-                }
-
-                if (field.GetWalls().left) {
-                    g2.drawLine(iPosX, iPosY, iPosX, iPosY+fieldLength);
-                }
-
                 iPosX += fieldLength;
             }
             iPosY += fieldLength;
@@ -93,22 +75,35 @@ public class Labyrinth {
 
     // Backtrack the way through the labyrinth
     public BufferedImage SolveNext() {
-        LabyrinthField currentField = fields[0][0];
-        currentField.SetVisited(true);
-        currentField.SetColor(Color.BLUE); // Change the color of the field
-        stack.add(currentField);
-
-        while (!stack.isEmpty()) {
+        if (currentField == null) {
+            currentField = fields[0][0];
+            currentField.SetVisited(true);
+            currentField.SetColor(Color.BLUE); // Change the color of the field
+            stack.add(currentField);
+        } else {
             currentField = stack.remove(stack.size()-1);
-            LabyrinthField neighbour = GetRandomUnvisitedNeighbour(currentField);
-            currentField.SetColor(Color.WHITE); // Change the color of the field
+            currentField.SetColor(Color.BLUE); // Change the color of the field
 
-            if (neighbour != null) {
+            ArrayList<LabyrinthField> neighbourFields = GetUnvisitedNeighbours(currentField);
+            // TODO: remove fields which can't be taken
+            for (LabyrinthField f : neighbourFields) {
+                int count = GetSurroundingVisitedFields(f).size();
+
+                if (count > 1) {
+                    neighbourFields.remove(f);
+                }
+            }
+
+            if (neighbourFields.size() > 0) {
+                LabyrinthField neighbour = neighbourFields.get(new Random().nextInt(neighbourFields.size()));
+
                 stack.add(currentField);
-                RemoveWallBetween(currentField, neighbour);
+                //RemoveSurroundingFields(currentField, neighbour);
                 neighbour.SetVisited(true);
                 neighbour.SetColor(Color.BLUE); // Change the color of the field
                 stack.add(neighbour);
+            } else {
+                currentField.SetColor(Color.WHITE);
             }
         }
 
@@ -116,10 +111,8 @@ public class Labyrinth {
         return image;
     }
 
-    // Return next unvisited neighbour
-    private LabyrinthField GetRandomUnvisitedNeighbour(LabyrinthField currField) {
+    private ArrayList<LabyrinthField> GetUnvisitedNeighbours(LabyrinthField currField) {
         ArrayList<LabyrinthField> neighbours = new ArrayList<>();
-        ArrayList<WallPosition> wallPositions = new ArrayList<>();
         LabyrinthField neighbour;
         int [] posArr = FindElement(currField);
 
@@ -131,9 +124,8 @@ public class Labyrinth {
                 // Above
                 neighbour = fields[width][height-1];
 
-                if (!neighbour.GetVisited()) {
+                if (neighbour != null && !neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    wallPositions.add(WallPosition.Above);
                 }
             }
 
@@ -141,9 +133,8 @@ public class Labyrinth {
                 // Right
                 neighbour = fields[width+1][height];
 
-                if (!neighbour.GetVisited()) {
+                if (neighbour != null && !neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    wallPositions.add(WallPosition.Right);
                 }
             }
 
@@ -151,9 +142,8 @@ public class Labyrinth {
                 // Below
                 neighbour = fields[width][height+1];
 
-                if (!neighbour.GetVisited()) {
+                if (neighbour != null && !neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    wallPositions.add(WallPosition.Below);
                 }
             }
 
@@ -161,35 +151,69 @@ public class Labyrinth {
                 // Left
                 neighbour = fields[width-1][height];
 
-                if (!neighbour.GetVisited()) {
+                if (neighbour != null && !neighbour.GetVisited()) {
                     neighbours.add(neighbour);
-                    wallPositions.add(WallPosition.Left);
                 }
             }
         }
 
-        Random rand = new Random();
-
-        if (neighbours.size() == 0) {
-            return null;
-        } else {
-            int r = rand.nextInt(neighbours.size());
-            wallPosition = wallPositions.get(r);
-            return neighbours.get(r);
-        }
+        return neighbours;
     }
 
-    // Remove wall between currentField and neighbour
-    private void RemoveWallBetween(LabyrinthField currField, LabyrinthField neighbour) {
-        currField.SetSingleWall(wallPosition, false);
-        neighbour.SetSingleWall(wallPosition.GetOppositePosition(), false);
+    private ArrayList<LabyrinthField> GetSurroundingVisitedFields(LabyrinthField field) {
+        ArrayList<LabyrinthField> neighbours = new ArrayList<>();
+        LabyrinthField neighbour;
+        int[] posXY = FindElement(field);
+
+        if (posXY != null) {
+            int width = posXY[0];
+            int height = posXY[1];
+
+            if (height-1 >= 0) {
+                // Above
+                neighbour = fields[width][height-1];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (width+1 <= fields.length-1) {
+                // Right
+                neighbour = fields[width+1][height];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (height+1 <= fields[0].length-1) {
+                // Below
+                neighbour = fields[width][height+1];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (width-1 >= 0) {
+                // Left
+                neighbour = fields[width-1][height];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+        }
+
+        return neighbours;
     }
 
     private int[] FindElement(LabyrinthField currField) {
         for (int i = 0; i < fields[0].length; i++) {
             for (int j = 0; j < fields.length; j++) {
                 LabyrinthField field = fields[i][j];
-                if (field.equals(currField)) {
+                if (field != null && field.equals(currField)) {
                     return new int[] { i, j };
                 }
             }
@@ -199,7 +223,6 @@ public class Labyrinth {
     }
 
     public boolean HasNext() {
-        // TODO: test if another step is needed
-        return true;
+        return !stack.isEmpty();
     }
 }

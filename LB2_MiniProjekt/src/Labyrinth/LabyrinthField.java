@@ -8,8 +8,8 @@ public class LabyrinthField {
     /* Member/Fields */
 
     private int length;
-    private Walls walls = new Walls();
-    private Color color = Color.WHITE;
+    //private Walls walls = new Walls();
+    private Color color = Color.BLACK;
     private boolean visited = false;
 
     /* Constructor */
@@ -28,13 +28,13 @@ public class LabyrinthField {
         this.length = length;
     }
 
-    public Walls GetWalls() {
+    /*public Walls GetWalls() {
         return walls;
     }
 
     public void SetWalls(Walls walls) {
         this.walls = walls;
-    }
+    }*/
 
     public Color GetColor() {
         return color;
@@ -54,7 +54,7 @@ public class LabyrinthField {
 
     /* Methods */
 
-    public void SetSingleWall(WallPosition wallPosition, boolean value) {
+    /*public void SetSingleWall(WallPosition wallPosition, boolean value) {
         switch (wallPosition) {
             case Above:
                 walls.above = value;
@@ -69,5 +69,5 @@ public class LabyrinthField {
                 walls.left = value;
                 break;
         }
-    }
+    }*/
 }
