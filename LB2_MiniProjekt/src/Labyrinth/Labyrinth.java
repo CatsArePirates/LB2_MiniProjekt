@@ -25,7 +25,7 @@ public class Labyrinth {
         fields = new LabyrinthField[fieldsInWidht][fieldsInHeight];
 
         InitializeFields(lengthOfField);
-        DrawImage(5);
+        DrawImage();
     }
 
     /* Getter/Setter */
@@ -46,9 +46,9 @@ public class Labyrinth {
     }
 
     // Draw fields into image
-    private void DrawImage(int border) {
+    private void DrawImage() {
         Graphics2D g2 = image.createGraphics();
-        g2.setStroke(new BasicStroke(border));
+        //g2.setStroke(new BasicStroke(border));
 
         int iPosX = 0; // width
         int iPosY = 0; // height
@@ -108,7 +108,7 @@ public class Labyrinth {
             }
         }
 
-        DrawImage(5);
+        DrawImage();
         return image;
     }
 

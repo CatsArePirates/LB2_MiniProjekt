@@ -112,7 +112,7 @@ public class FormMain extends JFrame {
         }
     }
 
-    private Image resizeImage(Image image, int pWidth, int pHeight) {
+    /*private Image ResizeImage(Image image, int pWidth, int pHeight) {
         // Calculate the factor needed to resize image
         int iWidth = image.getWidth(null);
         int iHeight = image.getHeight(null);
@@ -138,5 +138,5 @@ public class FormMain extends JFrame {
         g2.dispose();
 
         return resizedImage;
-    }
+    }*/
 }
