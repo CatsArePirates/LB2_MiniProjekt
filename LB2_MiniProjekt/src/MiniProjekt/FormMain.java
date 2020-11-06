@@ -17,6 +17,7 @@ public class FormMain extends JFrame {
     private JTextField tbWidth;
     private JButton btnSolve; // Click button to start solving the labyrinth
     private JButton btnBeDone; // Click button to jump to the end of the solving process
+    private JButton btnReset;
 
     private Labyrinth labyrinth = null;
 
@@ -45,6 +46,20 @@ public class FormMain extends JFrame {
             }
         });
 
+        // Action-listener for button btnReset
+        btnReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                labyrinth = null;
+                tbFieldLength.setText("");
+                tbHeight.setText("");
+                tbWidth.setText("");
+                labelImage.setIcon(null);
+                btnSolve.setEnabled(true);
+                btnBeDone.setEnabled(true);
+            }
+        });
+
         // Set input verifier for text-fields
         tbWidth.setInputVerifier(new InputVerifier());
         tbHeight.setInputVerifier(new InputVerifier());
@@ -56,8 +71,6 @@ public class FormMain extends JFrame {
         // Sanity check
         if (tbWidth.getText().length() <= 0 || tbHeight.getText().length() <= 0 || tbFieldLength.getText().length() <= 0)
             return;
-
-        btnBeDone.setEnabled(true);
 
         // Initialize labyrinth
         if (labyrinth == null) {
@@ -72,23 +85,31 @@ public class FormMain extends JFrame {
 
     // Solve the labyrinth
     private void BeDone() {
-        //btnBeDone.setEnabled(false);
+        // Initialize labyrinth
+        if (labyrinth == null) {
+            labyrinth = new Labyrinth(Integer.parseInt(tbWidth.getText()), Integer.parseInt(tbHeight.getText()), Integer.parseInt(tbFieldLength.getText()));
+            ImageIcon icon = new ImageIcon();
+            icon.setImage(labyrinth.getImage());
+            labelImage.setIcon(icon);
+        }
 
         do {
             Solve();
         } while (labyrinth.HasNext());
 
-        //btnSolve.setEnabled(true);
+        btnSolve.setEnabled(false);
+        btnBeDone.setEnabled(false);
     }
 
     private void Solve() {
-        ImageIcon icon = new ImageIcon();
-
-        icon.setImage(labyrinth.SolveNext());
-        labelImage.setIcon(icon);
-
-        //icon.setImage(labyrinth.SolveNext());
-        //labelImage.setIcon(icon);
+        if (labyrinth.HasNext()) {
+            ImageIcon icon = new ImageIcon();
+            icon.setImage(labyrinth.SolveNext());
+            labelImage.setIcon(icon);
+        } else {
+            btnSolve.setEnabled(false);
+            btnBeDone.setEnabled(false);
+        }
     }
 
     private Image resizeImage(Image image, int pWidth, int pHeight) {

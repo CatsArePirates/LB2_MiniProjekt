@@ -77,7 +77,7 @@
       </component>
       <component id="a7206" class="javax.swing.JButton" binding="btnBeDone">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="-1" height="75"/>
           </grid>
         </constraints>
@@ -86,6 +86,19 @@
           <font size="22"/>
           <foreground color="-2236963"/>
           <text value="Be done"/>
+        </properties>
+      </component>
+      <component id="55fbb" class="javax.swing.JButton" binding="btnReset">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="-1" height="75"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-13092035"/>
+          <font size="22"/>
+          <foreground color="-2236963"/>
+          <text value="Reset"/>
         </properties>
       </component>
     </children>

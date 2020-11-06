@@ -1,7 +1,5 @@
 package Labyrinth;
 
-import Enumerations.WallPosition;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -85,12 +83,11 @@ public class Labyrinth {
             currentField.SetColor(Color.BLUE); // Change the color of the field
 
             ArrayList<LabyrinthField> neighbourFields = GetUnvisitedNeighbours(currentField);
-            // TODO: remove fields which can't be taken
             ArrayList<LabyrinthField> tmpList = new ArrayList<LabyrinthField>();
             for (LabyrinthField f : neighbourFields) {
                 int count = GetSurroundingVisitedFields(f).size();
 
-                if (count > 1) {
+                if (count > 2) {
                     tmpList.add(f);
                 }
             }
@@ -103,7 +100,6 @@ public class Labyrinth {
                 LabyrinthField neighbour = neighbourFields.get(new Random().nextInt(neighbourFields.size()));
 
                 stack.add(currentField);
-                //RemoveSurroundingFields(currentField, neighbour);
                 neighbour.SetVisited(true);
                 neighbour.SetColor(Color.BLUE); // Change the color of the field
                 stack.add(neighbour);
@@ -183,7 +179,7 @@ public class Labyrinth {
                 }
             }
 
-            if (width+1 <= fields.length-1) {
+            if (width+1 < fields.length) {
                 // Right
                 neighbour = fields[width+1][height];
 
@@ -192,7 +188,7 @@ public class Labyrinth {
                 }
             }
 
-            if (height+1 <= fields[0].length-1) {
+            if (height+1 < fields[0].length) {
                 // Below
                 neighbour = fields[width][height+1];
 
@@ -204,6 +200,42 @@ public class Labyrinth {
             if (width-1 >= 0) {
                 // Left
                 neighbour = fields[width-1][height];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (width+1 < fields.length && height-1 >= 0) {
+                // Above-Right
+                neighbour = fields[width + 1][height - 1];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (width-1 > 0 && height-1 >= 0) {
+                // Above-Left
+                neighbour = fields[width - 1][height - 1];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (width+1 < fields.length && height+1 < fields[0].length) {
+                // Below-Right
+                neighbour = fields[width + 1][height + 1];
+
+                if (neighbour != null && neighbour.GetVisited()) {
+                    neighbours.add(neighbour);
+                }
+            }
+
+            if (width-1 >= 0 && height+1 < fields[0].length) {
+                // Below-Left
+                neighbour = fields[width - 1][height + 1];
 
                 if (neighbour != null && neighbour.GetVisited()) {
                     neighbours.add(neighbour);
@@ -228,6 +260,9 @@ public class Labyrinth {
     }
 
     public boolean HasNext() {
-        return !stack.isEmpty();
+        if (!stack.isEmpty() || currentField == null) {
+            return true;
+        }
+        return false;
     }
 }
